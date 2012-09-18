@@ -5,55 +5,70 @@ require_relative '../model/format_visits'
 module Recorders
   class FormatSuccessRecorder
 
-    def initialize
-      client = Bunny.new ENV['AMQP']
-      client.start
-      @queue = client.queue(ENV['QUEUE'] || 'format_success')
-      exchange = client.exchange('datainsight', :type => :topic)
-
-      @queue.bind(exchange, :key => 'google_analytics.format_success.weekly')
-      logger.info("Bound to google_analytics.format_success.weekly, listening for events")
-    end
-
     def run
-      @queue.subscribe do |msg|
+      queue.subscribe do |msg|
         begin
           logger.debug { "Received a message: #{msg}" }
-          FormatSuccessRecorder.process_message(JSON.parse(msg[:payload], :symbolize_names => true))
+          process_message(JSON.parse(msg[:payload], :symbolize_names => true))
         rescue Exception => e
           logger.error { e }
         end
       end
     end
 
-    def self.process_message(message)
-      #validate_message_value(message)
-      #format_success = FormatSuccess.first(
-      #    :start_at => DateTime.parse(message[:payload][:start_at]),
-      #    :end_at => DateTime.parse(message[:payload][:end_at]),
-      #    :format => message[:payload][:format]
-      #)
-      #if format_success
-      #  format_success.update(
-      #      collected_at: message[:envelope][:collected_at],
-      #      total_visits: message[:payload][:total_visits],
-      #      successful_visits: message[:payload][:total_visits]
-      #  )
-      #else
-      #  FormatSuccess.create(
-      #      :collected_at => DateTime.parse(message[:envelope][:collected_at]),
-      #      :start_at => DateTime.parse(message[:payload][:start_at]),
-      #      :end_at => DateTime.parse(message[:payload][:end_at]),
-      #      :format => message[:payload][:format],
-      #      :value => message[:payload][:value]
-      #  )
-      #end
+    private
+    def queue
+      @queue ||= create_queue
     end
 
-    #private
-    #def self.validate_message_value(message)
-    #  raise "No value provided in message payload: #{message.inspect}" unless message[:payload].has_key? :value
-    #  raise "Invalid value provided in message payload: #{message.inspect}" unless message[:payload][:value].is_a? Integer
-    #end
+    def create_queue
+      client = Bunny.new ENV['AMQP']
+      client.start
+      queue = client.queue(ENV['QUEUE'] || 'format_success')
+      exchange = client.exchange('datainsight', :type => :topic)
+
+      queue.bind(exchange, :key => 'google_analytics.entry_and_success.weekly')
+      logger.info("Bound to google_analytics.entry_and_success.weekly, listening for events")
+      queue
+    end
+
+    def process_message(message)
+      logger.debug { "Processing: #{message}" }
+
+      identifying_key = {
+          :start_at => parse_start_at(message[:payload][:start_at]),
+          :end_at => parse_end_at(message[:payload][:end_at]),
+          :format => message[:payload][:format]
+      }
+
+      data = {
+          :collected_at => DateTime.parse(message[:envelope][:collected_at]),
+          :entries => message[:payload][:entries],
+          :successes => message[:payload][:successes]
+      }
+
+      format_visits = FormatVisits.first(identifying_key)
+      if format_visits
+        format_visits.update(data)
+      else
+        FormatVisits.create(identifying_key.merge(data))
+      end
+    end
+
+    def parse_start_at(start_at)
+      DateTime.parse(start_at)
+    end
+
+    # This recorder stores start and end as dates while the message format uses date times on date boundaries (midnight).
+    # This means that the date may have to be shifted back
+    def parse_end_at(end_at)
+      end_at = DateTime.parse(end_at)
+      if (end_at.hour + end_at.minute + end_at.second) == 0
+        # up to midnight, so including the previous day
+        end_at - 1
+      else
+        end_at
+      end
+    end
   end
 end

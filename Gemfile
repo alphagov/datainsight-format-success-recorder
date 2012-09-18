@@ -19,7 +19,8 @@ end
 group :test do
   gem "dm-sqlite-adapter", "1.2.0"
   gem "rack-test"
-  gem "rspec", "2.10.0"
+  gem "rspec", "~> 2.11.0"
+  gem "rspec-mocks", "~> 2.11.2"
   gem "ci_reporter"
   gem "factory_girl"
   gem "autotest"
