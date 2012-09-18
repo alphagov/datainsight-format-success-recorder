@@ -1,0 +1,8 @@
+*.swp
+.idea
+.bundle
+*.zip
+vendor
+Gemfile.local.rb
+spec/reports
+log
