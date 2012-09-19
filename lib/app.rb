@@ -9,6 +9,8 @@ require_relative "datamapper_config"
 
 helpers Datainsight::Logging::Helpers
 
+SUPPORTED_FORMATS = [ "guide", "transaction" ]
+
 configure do
   enable :logging
   unless test?
@@ -19,7 +21,7 @@ end
 
 get '/format-success' do
   content_type :json
-  FormatSuccess.new.format_success.to_json
+  FormatSuccess.new.format_success(SUPPORTED_FORMATS).to_json
 end
 
 error do
