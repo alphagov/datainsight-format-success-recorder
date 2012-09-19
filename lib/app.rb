@@ -19,7 +19,7 @@ end
 
 get '/format-success' do
   content_type :json
-  FormatSuccess.new.format_succes.to_json
+  FormatSuccess.new.format_success.to_json
 end
 
 error do

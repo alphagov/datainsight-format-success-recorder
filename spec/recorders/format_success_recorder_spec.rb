@@ -14,7 +14,7 @@ describe "FormatSuccessRecorder" do
             :start_at => "2012-09-09T00:00:00+00:00",
             :end_at => "2012-09-16T00:00:00+00:00",
             :site => "govuk",
-            :format => "MS_transaction",
+            :format => "transaction",
             :entries => 10792,
             :successes => 0
         }

@@ -16,6 +16,43 @@ describe "Format Visits" do
     FormatVisits.get(format_visit.id).should_not be_nil
   end
 
+  describe "percent calculation" do
+    it "should be 0.0 if entries are 0 and successes are 0" do
+      format_visit = FactoryGirl.build(:format_visits, :entries => 0, :successes => 0)
+      format_visit.percentage_of_success.should == 0.0
+    end
+
+    it "should be 100.0 if entries are 10 and successes are 10" do
+      format_visit = FactoryGirl.build(:format_visits, :entries => 10, :successes => 10)
+      format_visit.percentage_of_success.should == 100.0
+    end
+
+    it "should be 50.0 if entries are 10 and successes are 5" do
+      format_visit = FactoryGirl.build(:format_visits, :entries => 10, :successes => 5)
+      format_visit.percentage_of_success.should == 50.0
+    end
+  end
+
+  describe "making nice format names" do
+    it "should capitalize first letter if format name is a single word" do
+      format_visit = FactoryGirl.build(:format_visits, :format => 'guide')
+
+      format_visit.format_label.should == "Guide"
+    end
+
+    it "should replace underscores with whitespaces if format name is of many words" do
+      format_visit = FactoryGirl.build(:format_visits, :format => 'smart_answer')
+
+      format_visit.format_label.should == "Smart Answer"
+    end
+
+    it "should replace underscores with whitespaces if format name is of many words" do
+      format_visit = FactoryGirl.build(:format_visits, :format => 'trade-tariff')
+
+      format_visit.format_label.should == "Trade-tariff"
+    end
+  end
+
   describe "constraints" do
     it "should not have duplicated entries" do
       format = 'guide'
@@ -28,6 +65,18 @@ describe "Format Visits" do
         format_visits = FactoryGirl.build(:format_visits, format: format, start_at: sunday, end_at: saturday)
         format_visits.save
       end.should raise_error
+      end
+
+    it "should not have different formats entries" do
+      sunday = Date.new(2012, 9, 9)
+      saturday = sunday + 6
+
+      FactoryGirl.create(:format_visits, format: 'guide', start_at: sunday, end_at: saturday)
+
+      lambda do
+        format_visits = FactoryGirl.build(:format_visits, format: 'transaction', start_at: sunday, end_at: saturday)
+        format_visits.save
+      end.should_not raise_error
     end
   end
 

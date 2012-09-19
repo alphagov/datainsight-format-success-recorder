@@ -11,13 +11,11 @@ class FormatVisits
   property :collected_at, DateTime, :required => true # When this measurement was collected
   property :updated_at, DateTime # When this measurement was last saved to the database
 
-  property :start_at, Date, :required => true
-  property :end_at, Date, :required => true
+  property :start_at, Date, :required => true, :unique_index => :format_date_range
+  property :end_at, Date, :required => true, :unique_index => :format_date_range
   property :entries, Integer, :required => true
   property :successes, Integer, :required => true
-  property :format, String, :required => true
-
-  validates_uniqueness_of :format, :start_at, :end_at
+  property :format, String, :required => true, :unique_index => :format_date_range
 
   validates_with_method :validate_entries_positive, :if => lambda { |m| m.entries.is_a?(Numeric) }
   validates_with_method :validate_successes_positive, :if => lambda { |m| m.successes.is_a?(Numeric) }
@@ -30,6 +28,17 @@ class FormatVisits
     all(:start_at => max(:start_at))
   end
 
+  def format_label
+    format.split('_').map(&:capitalize).join(' ')
+  end
+
+  def percentage_of_success
+    if entries == 0
+      0.0
+    else
+      (successes.to_f / entries) * 100
+    end
+  end
 
   private
   def validate_positive field
