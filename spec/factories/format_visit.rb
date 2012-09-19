@@ -7,6 +7,6 @@ FactoryGirl.define do
         end_at DateTime.new(2012, 9, 15)
         entries 5000
         successes 4000
-        format 'MS_transaction'
+        format 'transaction'
   end
 end

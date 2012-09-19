@@ -16,6 +16,21 @@ describe "Format Visits" do
     FormatVisits.get(format_visit.id).should_not be_nil
   end
 
+  describe "constraints" do
+    it "should not have duplicated entries" do
+      format = 'guide'
+      sunday = Date.new(2012, 9, 9)
+      saturday = sunday + 6
+
+      FactoryGirl.create(:format_visits, format: format, start_at: sunday, end_at: saturday)
+
+      lambda do
+        format_visits = FactoryGirl.build(:format_visits, format: format, start_at: sunday, end_at: saturday)
+        format_visits.save
+      end.should raise_error
+    end
+  end
+
   describe "validations" do
     it "should be valid" do
       format_visit = FactoryGirl.build(:format_visits)
@@ -142,6 +157,44 @@ describe "Format Visits" do
       end
     end
 
+  end
+
+  describe "get latest formats" do
+    before(:all) do
+      @first_sunday = Date.new(2012, 9, 9)
+      @first_saturday = @first_sunday + 6
+      @second_sunday = @first_sunday + 7
+      @second_saturday = @second_sunday + 6
+    end
+
+    it "should get the data for the last collected week" do
+      first = FactoryGirl.create(:format_visits, format: 'guide', start_at: @first_sunday, end_at: @first_saturday)
+      second = FactoryGirl.create(:format_visits, format: 'guide', start_at: @second_sunday, end_at: @second_saturday)
+
+      format_visits = FormatVisits.get_latest_formats
+      format_visits.should include(second)
+      format_visits.should_not include(first)
+    end
+
+    it "should get only one result per format" do
+      guide = FactoryGirl.create(:format_visits, format: 'guide', start_at: @second_sunday, end_at: @second_saturday)
+      transaction = FactoryGirl.create(:format_visits, format: 'transaction', start_at: @second_sunday, end_at: @second_saturday)
+      whatever = FactoryGirl.create(:format_visits, format: 'whatever', start_at: @second_sunday, end_at: @second_saturday)
+
+      format_visits = FormatVisits.get_latest_formats
+      format_visits.should have(3).items
+      format_visits.should include(guide, transaction, whatever)
+    end
+
+    it "should get only formats present for the latest week" do
+      guide = FactoryGirl.create(:format_visits, format: 'guide', start_at: @first_sunday, end_at: @first_saturday)
+      transaction = FactoryGirl.create(:format_visits, format: 'transaction', start_at: @second_sunday, end_at: @second_saturday)
+      whatever = FactoryGirl.create(:format_visits, format: 'whatever', start_at: @second_sunday, end_at: @second_saturday)
+
+      format_visits = FormatVisits.get_latest_formats
+      format_visits.should have(2).items
+      format_visits.should include(transaction, whatever)
+    end
   end
 
   after(:each) do

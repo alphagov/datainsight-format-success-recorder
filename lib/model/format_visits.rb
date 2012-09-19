@@ -17,12 +17,19 @@ class FormatVisits
   property :successes, Integer, :required => true
   property :format, String, :required => true
 
+  validates_uniqueness_of :format, :start_at, :end_at
+
   validates_with_method :validate_entries_positive, :if => lambda { |m| m.entries.is_a?(Numeric) }
   validates_with_method :validate_successes_positive, :if => lambda { |m| m.successes.is_a?(Numeric) }
   validates_with_method :validate_success_bigger_than_entries, :if => lambda { |m| m.entries.is_a?(Numeric) and m.successes.is_a?(Numeric) }
 
   validates_with_method :validate_week_length, :if => lambda { |m| (not m.start_at.nil?) and (not m.end_at.nil?) }
   validates_with_method :validate_week_starts_on_sunday, :if => lambda { |m| not m.start_at.nil? }
+
+  def self.get_latest_formats
+    all(:start_at => max(:start_at))
+  end
+
 
   private
   def validate_positive field
