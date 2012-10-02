@@ -28,10 +28,6 @@ class FormatVisits
     all(:start_at => max(:start_at))
   end
 
-  def format_label
-    format.split('_').map(&:capitalize).join(' ')
-  end
-
   def percentage_of_success
     if entries == 0
       0.0

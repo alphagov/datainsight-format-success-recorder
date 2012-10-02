@@ -7,7 +7,7 @@ class FormatSuccess
       select { |format_visit| formats.include?(format_visit.format) }.
       map { |format_visit|
         {
-            :format => format_visit.format_label,
+            :format => formats[format_visit.format],
             :entries => format_visit.entries,
             :percentage_of_success => format_visit.percentage_of_success
         }

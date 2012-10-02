@@ -9,7 +9,13 @@ require_relative "datamapper_config"
 
 helpers Datainsight::Logging::Helpers
 
-SUPPORTED_FORMATS = [ "guide", "transaction" ]
+SUPPORTED_FORMATS = { 
+  "guide" => "Guide",
+  "transaction" => "Transaction",
+  "programme" => "Benefit", 
+  "answer" => "Quick Answer", 
+  "smart_answer" => "Smart Answer"
+}
 
 configure do
   enable :logging

@@ -33,26 +33,6 @@ describe "Format Visits" do
     end
   end
 
-  describe "making nice format names" do
-    it "should capitalize first letter if format name is a single word" do
-      format_visit = FactoryGirl.build(:format_visits, :format => 'guide')
-
-      format_visit.format_label.should == "Guide"
-    end
-
-    it "should replace underscores with whitespaces if format name is of many words" do
-      format_visit = FactoryGirl.build(:format_visits, :format => 'smart_answer')
-
-      format_visit.format_label.should == "Smart Answer"
-    end
-
-    it "should replace underscores with whitespaces if format name is of many words" do
-      format_visit = FactoryGirl.build(:format_visits, :format => 'trade-tariff')
-
-      format_visit.format_label.should == "Trade-tariff"
-    end
-  end
-
   describe "constraints" do
     it "should not have duplicated entries" do
       format = 'guide'
