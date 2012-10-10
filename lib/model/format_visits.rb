@@ -24,6 +24,9 @@ class FormatVisits
   validates_with_method :validate_week_length, :if => lambda { |m| (not m.start_at.nil?) and (not m.end_at.nil?) }
   validates_with_method :validate_week_starts_on_sunday, :if => lambda { |m| not m.start_at.nil? }
 
+  validates_with_method :validate_start_at_in_past, :if => lambda { |m| not m.start_at.nil? }
+  validates_with_method :validate_end_at_in_past, :if => lambda { |m| not m.end_at.nil? }
+
   def self.get_latest_formats
     all(:start_at => max(:start_at))
   end
@@ -74,6 +77,22 @@ class FormatVisits
       true
     else
       [false, "The time between start at and end at should be a week."]
+    end
+  end
+
+  def validate_start_at_in_past
+    if self.start_at <= Date.today
+      true
+    else
+      [false, "The start at date should be in the past."]
+    end
+  end
+
+  def validate_end_at_in_past
+    if self.end_at <= Date.today
+      true
+    else
+      [false, "The end at date should be in the past."]
     end
   end
 end

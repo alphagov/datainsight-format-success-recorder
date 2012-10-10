@@ -8,6 +8,18 @@ describe "Format Visits" do
   before(:each) do
   end
 
+  after(:each) do
+    FormatVisits.destroy!
+  end
+
+  before(:all) do
+    Timecop.freeze(Time.utc(2012, 10, 10, 12, 0, 0))
+  end
+
+  after(:all) do
+    Timecop.return
+  end
+
   it "should be saved to db" do
     format_visit = FactoryGirl.build(:format_visits)
 
@@ -226,7 +238,20 @@ describe "Format Visits" do
     end
   end
 
-  after(:each) do
-    FormatVisits.destroy!
+  describe "should not allow future dates" do
+
+    it "should not be valid with start_at in the future" do
+      future_sunday = Date.new(2012, 10, 14)
+      format_visits = FactoryGirl.create(:format_visits, format: 'guide', start_at: future_sunday, end_at: future_sunday + 6)
+
+      format_visits.should_not be_valid
+    end
+
+    it "should not be valid with end_at in the future" do
+      future_saturday = Date.new(2012, 10, 13)
+      format_visits = FactoryGirl.create(:format_visits, format: 'guide', start_at: future_saturday - 6, end_at: future_saturday)
+
+      format_visits.should_not be_valid
+    end
   end
 end
