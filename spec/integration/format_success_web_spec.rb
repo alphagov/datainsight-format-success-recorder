@@ -17,8 +17,8 @@ describe("Format Success Web") do
     response = JSON.parse(last_response.body)
 
     response.should be_an(Array)
-    response.should include('format' => 'Guide', 'entries' => 5000, 'percentage_of_success' => 80.0)
-    response.should include('format' => 'Transaction', 'entries' => 5000, 'percentage_of_success' => 80.0)
+    response.should include('format' => 'Guides', 'entries' => 5000, 'percentage_of_success' => 80.0)
+    response.should include('format' => 'Transactions', 'entries' => 5000, 'percentage_of_success' => 80.0)
   end
 
   after(:each) do
