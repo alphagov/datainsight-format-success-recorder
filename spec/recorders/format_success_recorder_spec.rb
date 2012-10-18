@@ -13,10 +13,12 @@ describe "FormatSuccessRecorder" do
         :payload => {
             :start_at => "2012-09-09T00:00:00+00:00",
             :end_at => "2012-09-16T00:00:00+00:00",
-            :site => "govuk",
-            :format => "transaction",
-            :entries => 10792,
-            :successes => 0
+            :value => {
+              :site => "govuk",
+              :format => "transaction",
+              :entries => 10792,
+              :successes => 0
+            }
         }
     }
 
@@ -36,17 +38,17 @@ describe "FormatSuccessRecorder" do
     format_visits.collected_at.should == DateTime.parse(@message[:envelope][:collected_at])
     format_visits.start_at.should     == Date.new(2012, 9, 9)
     format_visits.end_at.should       == Date.new(2012, 9, 15)
-    format_visits.format.should       == @message[:payload][:format]
-    format_visits.entries.should      == @message[:payload][:entries]
-    format_visits.successes.should    == @message[:payload][:successes]
+    format_visits.format.should       == @message[:payload][:value][:format]
+    format_visits.entries.should      == @message[:payload][:value][:entries]
+    format_visits.successes.should    == @message[:payload][:value][:successes]
   end
 
   it "should update existing measurements" do
     @recorder.process_message(@message)
 
     updated_message = @message
-    updated_message[:payload][:entries] = 12792
-    updated_message[:payload][:successes] = 50
+    updated_message[:payload][:value][:entries] = 12792
+    updated_message[:payload][:value][:successes] = 50
 
     @recorder.process_message(updated_message)
 

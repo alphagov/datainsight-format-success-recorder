@@ -38,13 +38,13 @@ module Recorders
       identifying_key = {
           :start_at => parse_start_at(message[:payload][:start_at]),
           :end_at => parse_end_at(message[:payload][:end_at]),
-          :format => message[:payload][:format]
+          :format => message[:payload][:value][:format]
       }
 
       data = {
           :collected_at => DateTime.parse(message[:envelope][:collected_at]),
-          :entries => message[:payload][:entries],
-          :successes => message[:payload][:successes]
+          :entries => message[:payload][:value][:entries],
+          :successes => message[:payload][:value][:successes]
       }
 
       format_visits = FormatVisits.first(identifying_key)
