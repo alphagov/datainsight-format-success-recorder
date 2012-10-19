@@ -11,7 +11,7 @@ helpers Datainsight::Logging::Helpers
 
 SUPPORTED_FORMATS = { 
   "guide" => "Guides",
-  "transaction" => "Transactions",
+  #"transaction" => "Transactions",
   "programme" => "Benefits",
   "answer" => "Quick Answers",
   "smart_answer" => "Smart Answers"
