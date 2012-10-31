@@ -31,6 +31,10 @@ class FormatVisits
     all(:start_at => max(:start_at))
   end
 
+  def self.updated_at
+    max(:updated_at)
+  end
+
   def percentage_of_success
     if entries == 0
       0.0

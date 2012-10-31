@@ -1,6 +1,6 @@
 class FormatSuccess
 
-  def format_success formats
+  def format_success(formats)
     format_visits = FormatVisits.get_latest_formats
 
     format_visits.
@@ -12,5 +12,9 @@ class FormatSuccess
             :percentage_of_success => format_visit.percentage_of_success
         }
       }
+  end
+
+  def updated_at
+    FormatVisits.updated_at
   end
 end

@@ -15,10 +15,15 @@ describe("Format Success Web") do
 
     last_response.should be_ok
     response = JSON.parse(last_response.body)
+    response.should have_key("id")
+    response.should have_key("web_url")
+    response.should have_key("updated_at")
+    response["response_info"]["status"].should == "ok"
 
-    response.should be_an(Array)
-    response.should include('format' => 'Guides', 'entries' => 5000, 'percentage_of_success' => 80.0)
-    response.should include('format' => 'Smart Answers', 'entries' => 5000, 'percentage_of_success' => 80.0)
+    data = response["details"]["data"]
+    data.should be_an(Array)
+    data.should include('format' => 'Guides', 'entries' => 5000, 'percentage_of_success' => 80.0)
+    data.should include('format' => 'Smart Answers', 'entries' => 5000, 'percentage_of_success' => 80.0)
   end
 
   after(:each) do

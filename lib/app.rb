@@ -27,7 +27,17 @@ end
 
 get '/format-success' do
   content_type :json
-  FormatSuccess.new.format_success(SUPPORTED_FORMATS).to_json
+
+  {
+    :response_info => {:status => "ok"},
+    :id => "/format-success",
+    :web_url => "",
+    :details => {
+      :source => ["Google Analytics"],
+      :data => FormatSuccess.new.format_success(SUPPORTED_FORMATS)
+    },
+    :updated_at => FormatSuccess.new.updated_at
+  }.to_json
 end
 
 error do
