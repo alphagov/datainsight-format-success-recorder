@@ -1,7 +1,6 @@
 require "date"
 
 require_relative "../spec_helper"
-require_relative "../../lib/format_success"
 
 describe "Format Visits" do
 
@@ -228,13 +227,22 @@ describe "Format Visits" do
     end
 
     it "should get only formats present for the latest week" do
-      guide = FactoryGirl.create(:format_visits, format: 'guide', start_at: @first_sunday, end_at: @first_saturday)
+      FactoryGirl.create(:format_visits, format: 'guide', start_at: @first_sunday, end_at: @first_saturday)
       transaction = FactoryGirl.create(:format_visits, format: 'transaction', start_at: @second_sunday, end_at: @second_saturday)
       whatever = FactoryGirl.create(:format_visits, format: 'whatever', start_at: @second_sunday, end_at: @second_saturday)
 
       format_visits = FormatVisits.get_latest_formats
       format_visits.should have(2).items
       format_visits.should include(transaction, whatever)
+    end
+
+    it "should get only formats in the filter list if provided" do
+      transaction = FactoryGirl.create(:format_visits, format: 'transaction', start_at: @second_sunday, end_at: @second_saturday)
+      FactoryGirl.create(:format_visits, format: 'whatever', start_at: @second_sunday, end_at: @second_saturday)
+
+      format_visits = FormatVisits.get_latest_formats(["transaction"])
+      format_visits.should have(1).items
+      format_visits.should include(transaction)
     end
   end
 

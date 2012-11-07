@@ -27,8 +27,12 @@ class FormatVisits
   validates_with_method :validate_start_at_in_past, :if => lambda { |m| not m.start_at.nil? }
   validates_with_method :validate_end_at_in_past, :if => lambda { |m| not m.end_at.nil? }
 
-  def self.get_latest_formats
-    all(:start_at => max(:start_at))
+  def self.get_latest_formats(filter_by=nil)
+    query = {
+      :start_at => max(:start_at)
+    }
+    query[:format] = filter_by unless filter_by.nil?
+    all(query)
   end
 
   def self.updated_at

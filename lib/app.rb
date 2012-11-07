@@ -4,7 +4,6 @@ Bundler.require(:default, :exposer)
 require 'json'
 
 require_relative "model/format_visits"
-require_relative "format_success"
 require_relative "datamapper_config"
 
 helpers Datainsight::Logging::Helpers
@@ -34,9 +33,15 @@ get '/format-success' do
     :web_url => "",
     :details => {
       :source => ["Google Analytics"],
-      :data => FormatSuccess.new.format_success(SUPPORTED_FORMATS)
+      :data => FormatVisits.get_latest_formats(SUPPORTED_FORMATS.keys).map { |format_visit|
+        {
+          :format => SUPPORTED_FORMATS[format_visit.format],
+          :entries => format_visit.entries,
+          :percentage_of_success => format_visit.percentage_of_success
+        }
+      }
     },
-    :updated_at => FormatSuccess.new.updated_at
+    :updated_at => FormatVisits.updated_at
   }.to_json
 end
 
