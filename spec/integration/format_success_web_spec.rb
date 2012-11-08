@@ -22,8 +22,8 @@ describe("Format Success Web") do
 
     data = response["details"]["data"]
     data.should be_an(Array)
-    data.should include('format' => 'Guides', 'entries' => 5000, 'percentage_of_success' => 80.0)
-    data.should include('format' => 'Smart Answers', 'entries' => 5000, 'percentage_of_success' => 80.0)
+    data.should include('format' => 'guide', 'entries' => 5000, 'percentage_of_success' => 80.0)
+    data.should include('format' => 'smart_answer', 'entries' => 5000, 'percentage_of_success' => 80.0)
   end
 
   after(:each) do
