@@ -8,13 +8,8 @@ require_relative "datamapper_config"
 
 helpers Datainsight::Logging::Helpers
 
-SUPPORTED_FORMATS = { 
-  "guide" => "Guides",
-  #"transaction" => "Transactions",
-  "programme" => "Benefits",
-  "answer" => "Quick Answers",
-  "smart_answer" => "Smart Answers"
-}
+# Add format codes here to add them to the response.
+SUPPORTED_FORMATS = %w(guide programme answer smart_answer)
 
 configure do
   enable :logging
@@ -33,9 +28,9 @@ get '/format-success' do
     :web_url => "",
     :details => {
       :source => ["Google Analytics"],
-      :data => FormatVisits.get_latest_formats(SUPPORTED_FORMATS.keys).map { |format_visit|
+      :data => FormatVisits.get_latest_formats(SUPPORTED_FORMATS).map { |format_visit|
         {
-          :format => SUPPORTED_FORMATS[format_visit.format],
+          :format => format_visit.format,
           :entries => format_visit.entries,
           :percentage_of_success => format_visit.percentage_of_success
         }
