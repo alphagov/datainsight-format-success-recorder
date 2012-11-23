@@ -5,8 +5,12 @@ require 'json'
 
 require_relative "model/format_visits"
 require_relative "datamapper_config"
+require_relative "initializers"
 
 helpers Datainsight::Logging::Helpers
+
+use Airbrake::Rack
+enable :raise_errors
 
 # Add format codes here to add them to the response.
 SUPPORTED_FORMATS = %w(guide programme answer smart_answer)
