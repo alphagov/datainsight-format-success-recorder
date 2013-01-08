@@ -11,7 +11,7 @@ end
 
 namespace :spec do
   desc "Run RSpec unit code examples"
-  RSpec::Core::RakeTask.new (:unit) do |task|
+  RSpec::Core::RakeTask.new (:model) do |task|
     task.pattern = "spec/unit/*_spec.rb"
     task.rspec_opts = ["--format documentation"]
   end

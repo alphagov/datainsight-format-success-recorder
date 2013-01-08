@@ -8,8 +8,8 @@ describe("Format Success Web") do
   end
 
   it "should return the JSON data" do
-    FactoryGirl.create(:format_visits, :format => 'guide')
-    FactoryGirl.create(:format_visits, :format => 'smart_answer')
+    FactoryGirl.create(:format_success, :format => 'guide')
+    FactoryGirl.create(:format_success, :format => 'smart_answer')
 
     get '/format-success'
 
@@ -27,7 +27,7 @@ describe("Format Success Web") do
   end
 
   after(:each) do
-    FormatVisits.destroy!
+    FormatSuccess::Model.destroy!
   end
 
 

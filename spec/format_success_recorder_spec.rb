@@ -1,5 +1,5 @@
-require_relative "../spec_helper"
-require_relative "../../lib/recorders/format_success"
+require_relative "spec_helper"
+require_relative "../lib/recorder"
 
 describe "FormatSuccessRecorder" do
 
@@ -27,17 +27,17 @@ describe "FormatSuccessRecorder" do
   end
 
   after(:each) do
-    FormatVisits.destroy
+    FormatSuccess::Model.destroy
   end
 
   it "should store valid message" do
     @recorder.process_message(@message)
 
-    format_visits = FormatVisits.first
+    format_visits = FormatSuccess::Model.first
     format_visits.should_not be_nil
     format_visits.collected_at.should == DateTime.parse(@message[:envelope][:collected_at])
-    format_visits.start_at.should     == Date.new(2012, 9, 9)
-    format_visits.end_at.should       == Date.new(2012, 9, 15)
+    format_visits.start_at.should     == DateTime.new(2012, 9, 9)
+    format_visits.end_at.should       == DateTime.new(2012, 9, 16)
     format_visits.format.should       == @message[:payload][:value][:format]
     format_visits.entries.should      == @message[:payload][:value][:entries]
     format_visits.successes.should    == @message[:payload][:value][:successes]
@@ -52,16 +52,16 @@ describe "FormatSuccessRecorder" do
 
     @recorder.process_message(updated_message)
 
-    FormatVisits.all.should have(1).item
+    FormatSuccess::Model.all.should have(1).item
 
-    format_visits = FormatVisits.first
+    format_visits = FormatSuccess::Model.first
     format_visits.entries.should == 12792
     format_visits.successes.should == 50
   end
 
   describe "validation" do
     it "should raise an error if model is invalid" do
-      FormatVisits.stub(:create).and_raise(DataMapper::SaveFailureError.new(nil, nil))
+      FormatSuccess::Model.any_instance.stub(:save).and_raise(DataMapper::SaveFailureError.new(nil, nil))
 
       lambda {
         @recorder.process_message(@message)

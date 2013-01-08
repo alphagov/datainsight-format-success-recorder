@@ -1,6 +1,6 @@
 require 'json'
 
-require_relative '../model/format_visits'
+require_relative 'model'
 
 module Recorders
   class FormatSuccessRecorder
@@ -44,14 +44,21 @@ module Recorders
       data = {
           :collected_at => DateTime.parse(message[:envelope][:collected_at]),
           :entries => message[:payload][:value][:entries],
-          :successes => message[:payload][:value][:successes]
+          :successes => message[:payload][:value][:successes],
+          :source => message[:envelope][:collector]
       }
 
-      format_visits = FormatVisits.first(identifying_key)
+      format_visits = FormatSuccess::Model.first(identifying_key)
       if format_visits
         format_visits.update(data)
       else
-        FormatVisits.create(identifying_key.merge(data))
+        format_visits = FormatSuccess::Model.new(identifying_key.merge(data))
+        format_visits.valid?
+        format_visits.errors.each do |error|
+          p error
+        end
+        format_visits.save
+
       end
     end
 
@@ -62,13 +69,7 @@ module Recorders
     # This recorder stores start and end as dates while the message format uses date times on date boundaries (midnight).
     # This means that the date may have to be shifted back
     def parse_end_at(end_at)
-      end_at = DateTime.parse(end_at)
-      if (end_at.hour + end_at.minute + end_at.second) == 0
-        # up to midnight, so including the previous day
-        end_at - 1
-      else
-        end_at
-      end
+      DateTime.parse(end_at)
     end
   end
 end

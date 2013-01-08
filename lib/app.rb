@@ -3,7 +3,7 @@ Bundler.require(:default, :exposer)
 
 require 'json'
 
-require_relative "model/format_visits"
+require_relative "model"
 require_relative "datamapper_config"
 require_relative "initializers"
 
@@ -32,15 +32,15 @@ get '/format-success' do
     :web_url => "",
     :details => {
       :source => ["Google Analytics"],
-      :data => FormatVisits.get_latest_formats(SUPPORTED_FORMATS).map { |format_visit|
+      :data => FormatSuccess::Model.get_latest_formats(SUPPORTED_FORMATS).map { |format_success|
         {
-          :format => format_visit.format,
-          :entries => format_visit.entries,
-          :percentage_of_success => format_visit.percentage_of_success
+          :format => format_success.format,
+          :entries => format_success.entries,
+          :percentage_of_success => format_success.percentage_of_success
         }
       }
     },
-    :updated_at => FormatVisits.updated_at
+    :updated_at => FormatSuccess::Model.updated_at
   }.to_json
 end
 
