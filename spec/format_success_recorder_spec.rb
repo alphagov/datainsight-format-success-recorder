@@ -23,7 +23,7 @@ describe "FormatSuccessRecorder" do
         }
     }
 
-    @recorder = Recorders::FormatSuccessRecorder.new
+    @recorder = FormatSuccess::Recorder.new
   end
 
   after(:each) do

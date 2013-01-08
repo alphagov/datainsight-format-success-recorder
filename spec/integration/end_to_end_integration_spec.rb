@@ -27,8 +27,8 @@ describe "end to end integration" do
       }
     }
 
-    Recorders::FormatSuccessRecorder.send(:public, :update_message)
-    @recorder = Recorders::FormatSuccessRecorder.new
+    FormatSuccess::Recorder.send(:public, :update_message)
+    @recorder = FormatSuccess::Recorder.new
   end
 
   after(:each) do

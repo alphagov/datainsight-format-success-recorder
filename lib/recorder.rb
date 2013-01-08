@@ -2,8 +2,8 @@ require "json"
 require "datainsight_recorder/recorder"
 require_relative "model"
 
-module Recorders
-  class FormatSuccessRecorder
+module FormatSuccess
+  class Recorder
     include DataInsight::Recorder::AMQP
 
     def queue_name

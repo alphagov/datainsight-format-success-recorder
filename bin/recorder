@@ -18,7 +18,7 @@ command :run do |c|
     begin
       Datainsight::Logging.configure(:type => :recorder)
       DataMapperConfig.configure
-      Recorders::FormatSuccessRecorder.new.run
+      FormatSuccess::Recorder.new.run
     rescue Exception => e
       Airbrake.notify(e)
       raise e
