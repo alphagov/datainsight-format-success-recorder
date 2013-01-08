@@ -23,7 +23,6 @@ describe "FormatSuccessRecorder" do
         }
     }
 
-    Recorders::FormatSuccessRecorder.send(:public, :process_message)
     @recorder = Recorders::FormatSuccessRecorder.new
   end
 
@@ -31,8 +30,8 @@ describe "FormatSuccessRecorder" do
     FormatSuccess::Model.destroy
   end
 
-  it "should store valid message" do
-    @recorder.process_message(@message)
+  it "should store a valid message" do
+    @recorder.update_message(@message)
 
     format_visits = FormatSuccess::Model.first
     format_visits.should_not be_nil
@@ -45,17 +44,19 @@ describe "FormatSuccessRecorder" do
   end
 
   it "should update existing measurements" do
-    @recorder.process_message(@message)
+    @recorder.update_message(@message)
 
     updated_message = @message
     updated_message[:payload][:value][:entries] = 12792
     updated_message[:payload][:value][:successes] = 50
 
-    @recorder.process_message(updated_message)
+    @recorder.update_message(updated_message)
 
-    FormatSuccess::Model.all.should have(1).item
+    records = FormatSuccess::Model.all
 
-    format_visits = FormatSuccess::Model.first
+    records.should have(1).item
+
+    format_visits = records.first
     format_visits.entries.should == 12792
     format_visits.successes.should == 50
   end
@@ -65,7 +66,7 @@ describe "FormatSuccessRecorder" do
       FormatSuccess::Model.any_instance.stub(:save).and_raise(DataMapper::SaveFailureError.new(nil, nil))
 
       lambda {
-        @recorder.process_message(@message)
+        @recorder.update_message(@message)
       }.should raise_error(DataMapper::SaveFailureError)
     end
   end

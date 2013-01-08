@@ -27,7 +27,7 @@ describe "end to end integration" do
       }
     }
 
-    Recorders::FormatSuccessRecorder.send(:public, :process_message)
+    Recorders::FormatSuccessRecorder.send(:public, :update_message)
     @recorder = Recorders::FormatSuccessRecorder.new
   end
 
@@ -36,7 +36,7 @@ describe "end to end integration" do
   end
 
   it "should process a message and then expose it" do
-    @recorder.process_message(@message)
+    @recorder.update_message(@message)
 
     get "/format-success"
 
