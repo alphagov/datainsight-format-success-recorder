@@ -23,6 +23,22 @@ module FormatSuccess
 
     validates_with_method :validate_start_at_in_past
 
+    def self.update_from_message(message)
+      query = {
+        start_at: DateTime.parse(message[:payload][:start_at]),
+        end_at: DateTime.parse(message[:payload][:end_at]),
+        format: message[:payload][:value][:format]
+      }
+      record = Model.first(query)
+      record = Model.new(query) unless record
+
+      record.collected_at = DateTime.parse(message[:envelope][:collected_at])
+      record.source = message[:envelope][:collector]
+      record.entries = message[:payload][:value][:entries]
+      record.successes = message[:payload][:value][:successes]
+      record.save
+    end
+
     def self.get_latest_formats(filter_by=nil)
       query = {
         :start_at.gte => max(:start_at)

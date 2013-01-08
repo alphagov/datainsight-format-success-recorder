@@ -19,6 +19,64 @@ describe "Format Visits" do
     Timecop.return
   end
 
+  describe "update from message" do
+    before(:each) do
+      @message = {
+        :envelope => {
+          :collected_at => "2012-12-12T00:00:00",
+          :collector    => "Google Analytics",
+          :_routing_key => "google_analytics.entry_and_success.weekly"
+        },
+        :payload => {
+          :start_at => "2011-03-28T00:00:00",
+          :end_at => "2011-04-04T00:00:00",
+          :value => {
+            :site => "govuk",
+            :format => "transaction",
+            :entries => 10792,
+            :successes => 0
+          }
+        }
+      }
+    end
+
+    it "should insert a new record" do
+      FormatSuccess::Model.update_from_message(@message)
+
+      records = FormatSuccess::Model.all
+
+      records.should have(1).item
+
+      record = records.first
+      record.collected_at.should == DateTime.new(2012, 12, 12)
+      record.start_at.should == DateTime.new(2011, 3, 28)
+      record.end_at.should == DateTime.new(2011, 4, 4)
+      record.format.should == "transaction"
+      record.entries.should == 10792
+      record.successes.should == 0
+    end
+
+    it "should update an existing record" do
+      FormatSuccess::Model.update_from_message(@message)
+      @message[:payload][:value][:entries] = 9
+      @message[:payload][:value][:successes] = 1
+      FormatSuccess::Model.update_from_message(@message)
+
+      records = FormatSuccess::Model.all
+
+      records.should have(1).item
+
+      record = records.first
+      record.collected_at.should == DateTime.new(2012, 12, 12)
+      record.start_at.should == DateTime.new(2011, 3, 28)
+      record.end_at.should == DateTime.new(2011, 4, 4)
+      record.format.should == "transaction"
+      record.entries.should == 9
+      record.successes.should == 1
+    end
+
+  end
+
   it "should be saved to db" do
     format_success = FactoryGirl.build(:format_success)
 
