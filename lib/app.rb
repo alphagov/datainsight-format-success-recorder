@@ -13,7 +13,7 @@ use Airbrake::Rack
 enable :raise_errors
 
 # Add format codes here to add them to the response.
-SUPPORTED_FORMATS = %w(guide programme answer smart_answer)
+SUPPORTED_FORMATS = %w(guide programme answer smart_answer transaction)
 
 configure do
   enable :logging
