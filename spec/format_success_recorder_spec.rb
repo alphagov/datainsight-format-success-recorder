@@ -7,7 +7,7 @@ describe "FormatSuccessRecorder" do
   before(:each) do
     @message = {
         :envelope => {
-            :collected_at => "2012-09-18T13:51:59+01:00",
+            :collected_at => "2012-09-18T13:51:59+00:00",
             :collector => "Google Analytics",
             :_routing_key => "google_analytics.entry_and_success.weekly"
         },
@@ -35,6 +35,7 @@ describe "FormatSuccessRecorder" do
 
     format_visits = FormatSuccess::Model.first
     format_visits.should_not be_nil
+    # todo this may break when the clock changes!
     format_visits.collected_at.should == DateTime.parse(@message[:envelope][:collected_at])
     format_visits.start_at.should     == DateTime.new(2012, 9, 9)
     format_visits.end_at.should       == DateTime.new(2012, 9, 16)
