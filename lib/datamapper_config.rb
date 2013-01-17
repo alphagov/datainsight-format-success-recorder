@@ -18,7 +18,7 @@ module DataMapperConfig
   private
 
   def self.configure_development
-    DataMapper.setup(:default, 'mysql://datainsight:@localhost/datainsights_format_success')
+    DataMapper.setup(:default, 'mysql://root:@localhost/datainsights_format_success')
     DataMapper.finalize
     DataMapper.auto_upgrade!
   end
@@ -30,7 +30,8 @@ module DataMapperConfig
   end
 
   def self.configure_test
-    DataMapper.setup(:default, 'mysql://datainsight:@localhost/datainsights_format_success_test')
+    ENV['TZ'] = DateTime.now.zone
+    DataMapper.setup(:default, 'sqlite::memory:')
     DataMapper.finalize
     DataMapper.auto_upgrade!
   end
