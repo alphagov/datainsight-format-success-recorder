@@ -1,6 +1,7 @@
 require "json"
 require "datainsight_recorder/recorder"
 require_relative "model"
+require_relative "content_engagement_visits"
 
 module FormatSuccess
   class Recorder
@@ -11,11 +12,19 @@ module FormatSuccess
     end
 
     def routing_keys
-      ["google_analytics.entry_and_success.weekly"]
+      MODELS.keys
     end
 
     def update_message(message)
-      FormatSuccess::Model.update_from_message(message)
+      routing_key = message[:envelope][:_routing_key]
+      MODELS[routing_key].update_from_message(message)
     end
+
+    private
+
+    MODELS = {
+        "google_analytics.entry_and_success.weekly" => FormatSuccess::Model,
+        "google_analytics.content_engagement.weekly" => ContentEngagementVisits
+    }
   end
 end

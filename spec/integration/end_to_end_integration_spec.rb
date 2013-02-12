@@ -13,7 +13,8 @@ describe "end to end integration" do
     @message = {
       :envelope => {
         :collected_at => "2012-09-18T13:51:59+01:00",
-        :collector => "Google Analytics"
+        :collector => "Google Analytics",
+        :_routing_key => "google_analytics.entry_and_success.weekly"
       },
       :payload => {
         :start_at => "2012-09-09T00:00:00+00:00",

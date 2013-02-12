@@ -6,11 +6,11 @@ module DataMapperConfig
     DataMapper.logger = Logging.logger[DataMapper]
     case (env or "default").to_sym
     when :test
-        DataMapperConfig.configure_test
-      when :production
-        DataMapperConfig.configure_production
-      else
-        DataMapperConfig.configure_development
+      DataMapperConfig.configure_test
+    when :production
+      DataMapperConfig.configure_production
+    else
+      DataMapperConfig.configure_development
     end
     DataMapper::Model.raise_on_save_failure = true
   end
