@@ -1,5 +1,5 @@
 require "spec_helper"
-require_relative "../lib/content_engagement_visits"
+require_relative "../lib/model/content_engagement_visits"
 
 describe ContentEngagementVisits do
   describe "last_week_visits" do

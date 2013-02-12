@@ -3,9 +3,11 @@ Bundler.require(:default, :exposer)
 
 require 'json'
 
-require_relative "model"
+require_relative "model/format_success"
+require_relative "model/content_engagement_visits"
 require_relative "datamapper_config"
 require_relative "initializers"
+require_relative "presenter/content_engagement_detail_presenter"
 
 helpers Datainsight::Logging::Helpers
 
@@ -42,6 +44,18 @@ get '/format-success' do
     },
     :updated_at => FormatSuccess::Model.updated_at
   }.to_json
+end
+
+get '/content-engagement-detail/weekly' do
+  content_engagement_visits = ContentEngagementVisits.last_week_visits
+  return 500 if content_engagement_visits.empty?
+
+
+  response = ContentEngagementDetailPresenter.new.present(content_engagement_visits)
+
+  content_type :json
+
+  response.to_json
 end
 
 error do

@@ -1,6 +1,8 @@
 
+# WARNING
+# THIS IS COPIED FROM THE INSIDE GOV RECORDER
 class ContentEngagementVisits
-  include DataMapper::Resource
+include DataMapper::Resource
   include DataInsight::Recorder::BaseFields
   include DataInsight::Recorder::TimeSeries
 

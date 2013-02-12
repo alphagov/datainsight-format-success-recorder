@@ -1,7 +1,7 @@
 require "json"
 require "datainsight_recorder/recorder"
-require_relative "model"
-require_relative "content_engagement_visits"
+require_relative "model/format_success"
+require_relative "model/content_engagement_visits"
 
 module FormatSuccess
   class Recorder
@@ -24,7 +24,7 @@ module FormatSuccess
 
     MODELS = {
         "google_analytics.entry_and_success.weekly" => FormatSuccess::Model,
-        "google_analytics.content_engagement.weekly" => ContentEngagementVisits
+          "google_analytics.content_engagement.weekly" => ContentEngagementVisits
     }
   end
 end
