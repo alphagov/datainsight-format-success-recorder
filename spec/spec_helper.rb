@@ -1,5 +1,5 @@
 require 'bundler/setup'
-Bundler.require
+Bundler.require(:default, :test)
 
 ENV['RACK_ENV'] = "test"
 require "factory_girl"
@@ -13,9 +13,8 @@ Datainsight::Logging.configure(:env => :test)
 DataMapperConfig.configure(:test)
 FactoryGirl.find_definitions
 
-Spec::Runner.configure do |config|
+RSpec.configure do |config|
   config.before(:each) do
-    FormatSuccess::Model.destroy!
-    ContentEngagementVisits.destroy!
+    DatabaseCleaner.clean_with(:truncation)
   end
 end

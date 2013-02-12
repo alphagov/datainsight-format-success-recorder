@@ -27,6 +27,7 @@ group :test do
   gem "factory_girl"
   gem "autotest"
   gem "timecop"
+  gem "database_cleaner"
 end
 
 local_gemfile = File.dirname(__FILE__) + "/Gemfile.local.rb"
