@@ -10,6 +10,7 @@ require_relative '../lib/datamapper_config'
 require 'timecop'
 
 Datainsight::Logging.configure(:env => :test)
+::Logging.logger.root.level = :warn
 DataMapperConfig.configure(:test)
 FactoryGirl.find_definitions
 
