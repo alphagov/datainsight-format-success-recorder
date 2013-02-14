@@ -11,11 +11,14 @@ include DataMapper::Resource
   property :entries, Integer, required: true
   property :successes, Integer, required: true
 
+  has 1, :artefact, parent_key: [:format, :slug], child_key: [:format, :slug]
+
   validates_with_method :entries, method: :is_entries_positive?
   validates_with_method :successes, method: :is_successes_positive?
 
+
   def self.last_week_visits
-    ContentEngagementVisits.all(start_at: max(:start_at))
+    ContentEngagementVisits.all(start_at: max(:start_at), :artefact.not => nil)
   end
 
   def self.update_from_message(message)

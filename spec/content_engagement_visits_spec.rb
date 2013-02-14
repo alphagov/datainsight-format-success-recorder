@@ -4,18 +4,45 @@ require_relative "../lib/model/content_engagement_visits"
 describe ContentEngagementVisits do
   describe "last_week_visits" do
     it "should return visits for the available week" do
-      FactoryGirl.create(:content_engagement_visits, slug: "/foo",
+      FactoryGirl.create(:artefact, format: "guide", slug: "foo")
+      FactoryGirl.create(:artefact, format: "guide", slug: "bar")
+      FactoryGirl.create(:artefact, format: "guide", slug: "alfa")
+
+      FactoryGirl.create(:content_engagement_visits, slug: "foo", format: "guide",
                          start_at: DateTime.new(2012, 7, 1), end_at: DateTime.new(2012, 7, 8))
-      FactoryGirl.create(:content_engagement_visits, slug: "/bar",
+      FactoryGirl.create(:content_engagement_visits, slug: "bar", format: "guide",
                          start_at: DateTime.new(2012, 7, 1), end_at: DateTime.new(2012, 7, 8))
 
-      older_item = FactoryGirl.create(:content_engagement_visits, slug: "/alfa",
+      older_item = FactoryGirl.create(:content_engagement_visits, slug: "alfa", format: "guide",
                                       start_at: DateTime.new(2012, 6, 24), end_at: DateTime.new(2012, 7, 1))
 
       content_engagement_visits = ContentEngagementVisits.last_week_visits
 
       content_engagement_visits.should have(2).items
       content_engagement_visits.should_not include(older_item)
+    end
+
+    it "should return visits together with artefact details" do
+      FactoryGirl.create(:content_engagement_visits, format: "guide", slug: "foo",
+                         start_at: DateTime.new(2012, 7, 1), end_at: DateTime.new(2012, 7, 8))
+      FactoryGirl.create(:artefact, format: "guide", slug: "foo", title: "Foo title", url: "https://www.gov.uk/foo")
+
+      content_engagement_visits = ContentEngagementVisits.last_week_visits
+
+      content_engagement_visits.should have(1).items
+      content_engagement_visits.first.artefact.slug.should == "foo"
+      content_engagement_visits.first.artefact.title.should == "Foo title"
+      content_engagement_visits.first.artefact.url.should == "https://www.gov.uk/foo"
+    end
+
+    it "should not return visits that do not have a matching artefact" do
+      FactoryGirl.create(:artefact, format: "guide", slug: "driving-on-the-right-side")
+      FactoryGirl.create(:content_engagement_visits, format: "guide", slug: "driving-on-the-right-side")
+      FactoryGirl.create(:content_engagement_visits, format: "programme", slug: "an-unknown-slug")
+
+      content_engagement_visits = ContentEngagementVisits.last_week_visits
+
+      content_engagement_visits.should have(1).item
     end
   end
 
