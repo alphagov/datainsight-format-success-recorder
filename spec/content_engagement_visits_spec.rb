@@ -36,9 +36,9 @@ describe ContentEngagementVisits do
     end
 
     it "should not return visits that do not have a matching artefact" do
-      FactoryGirl.create(:artefact, format: "guide", slug: "driving-on-the-right-side")
-      FactoryGirl.create(:content_engagement_visits, format: "guide", slug: "driving-on-the-right-side")
-      FactoryGirl.create(:content_engagement_visits, format: "programme", slug: "an-unknown-slug")
+      artefact = FactoryGirl.create(:artefact, format: "guide", slug: "driving-on-the-right-side")
+      FactoryGirl.create(:content_engagement_visits, format: "guide", slug: "driving-on-the-right-side", artefact: artefact)
+      FactoryGirl.create(:content_engagement_visits, format: "programme", slug: "an-unknown-slug", artefact: nil)
 
       content_engagement_visits = ContentEngagementVisits.last_week_visits
 
