@@ -1,6 +1,10 @@
 require 'dm-constraints'
 require 'dm-migrations'
 
+require_relative '../lib/model/format_success'
+require_relative '../lib/model/content_engagement_visits'
+require_relative '../lib/model/artefact'
+
 module DataMapperConfig
   def self.configure(env=ENV["RACK_ENV"])
     DataMapper.logger = Logging.logger[DataMapper]
