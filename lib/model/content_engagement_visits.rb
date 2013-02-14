@@ -18,7 +18,7 @@ include DataMapper::Resource
 
 
   def self.last_week_visits
-    ContentEngagementVisits.all(start_at: max(:start_at), :artefact.not => nil)
+    ContentEngagementVisits.all(start_at: max(:start_at)).reject { |visits| visits.artefact.nil? }
   end
 
   def self.update_from_message(message)
