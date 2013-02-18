@@ -58,6 +58,25 @@ describe ContentEngagementDetailPresenter do
     response[:response_info][:status].should == "ok"
   end
 
+  it "should return nil entries and successes if entries are below 1000" do
+    data = [
+      FactoryGirl.build(:content_engagement_visits, entries: 1200, successes: 1100, artefact: FactoryGirl.build(:artefact)),
+      FactoryGirl.build(:content_engagement_visits, entries: 1000, successes:  550, artefact: FactoryGirl.build(:artefact)),
+      FactoryGirl.build(:content_engagement_visits, entries:  999, successes: 1100, artefact: FactoryGirl.build(:artefact)),
+    ]
+
+    response = ContentEngagementDetailPresenter.new.present(data)
+
+    response[:details][:data][0][:entries].should == 1200
+    response[:details][:data][0][:successes].should == 1100
+
+    response[:details][:data][1][:entries].should == 1000
+    response[:details][:data][1][:successes].should == 550
+
+    response[:details][:data][2][:entries].should be_nil
+    response[:details][:data][2][:successes].should be_nil
+  end
+
   it "should fail if start_at vary among given objects" do
     list_of_content_engagement_visits = [
         FactoryGirl.build(:content_engagement_visits,
