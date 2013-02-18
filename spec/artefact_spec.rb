@@ -35,6 +35,16 @@ describe Artefact do
       artefact.slug.should == "apply-for-student-finance"
     end
 
+    it "should change smart-answer format to smart_answer" do
+      @message[:payload][:format] = "smart-answer"
+
+      Artefact::update_from_message(@message)
+
+      stored_artefact = Artefact.first
+
+      stored_artefact.format.should == "smart_answer"
+    end
+
     it "should update an existing record with the same format and slug" do
       FactoryGirl.create(:artefact, slug: "apply-for-student-finance", format: "guide", title: "Old title")
 

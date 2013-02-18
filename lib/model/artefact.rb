@@ -11,7 +11,7 @@ class Artefact
     values = {
         collected_at: Date.parse(message[:envelope][:collected_at]),
         source: message[:envelope][:collector],
-        format: message[:payload][:format],
+        format: fix_format(message[:payload][:format]),
         title: message[:payload][:title],
         url: message[:payload][:web_url],
         slug: message[:payload][:web_url].split("/").last
@@ -29,6 +29,16 @@ class Artefact
     else
       logger.info("Create new record for #{query}")
       Artefact.create(values)
+    end
+  end
+
+  private
+  def self.fix_format(format)
+    case format
+    when "smart-answer"
+      "smart_answer"
+    else
+      format
     end
   end
 end
