@@ -1,8 +1,7 @@
-
 # WARNING
 # THIS IS COPIED FROM THE INSIDE GOV RECORDER
 class ContentEngagementVisits
-include DataMapper::Resource
+  include DataMapper::Resource
   include DataInsight::Recorder::BaseFields
   include DataInsight::Recorder::TimeSeries
 
@@ -11,30 +10,26 @@ include DataMapper::Resource
   property :entries, Integer, required: true
   property :successes, Integer, required: true
 
-  has 1, :artefact, parent_key: [:format, :slug], child_key: [:format, :slug]
-
   validates_with_method :entries, method: :is_entries_positive?
   validates_with_method :successes, method: :is_successes_positive?
 
+  attr_reader :artefact
 
   def self.last_week_visits
-    artefacts = Artefact.all
+    visits = ContentEngagementVisits.all(start_at: max(:start_at))
+    visits_hash = Hash[visits.map { |visits| [[visits.format, visits.slug], visits] }]
 
-    start_at = max(:start_at)
-
-    visits = ContentEngagementVisits.all(start_at: start_at)
-
-    artefacts.map do |a|
-      visits_for(a, visits, start_at)
+    Artefact.all.map do |artefact|
+      visits_for(artefact, visits_hash, max(:start_at)).tap { |visits| visits.send(:artefact=, artefact) }
     end
   end
 
-def self.visits_for(a, visits, start_at)
-  artefact_visits = visits.find { |v| v.slug == a.slug && v.format == a.format }
-  artefact_visits || ContentEngagementVisits.new(entries: 0, successes: 0,  slug: a.slug, format: a.format, start_at: start_at, end_at: start_at + 7, artefact: a)
-end
+  def self.visits_for(artefact, visits, start_at)
+    artefact_visits = visits[[artefact.format, artefact.slug]]
+    artefact_visits || ContentEngagementVisits.new(entries: 0, successes: 0, slug: artefact.slug, format: artefact.format, start_at: start_at, end_at: start_at + 7)
+  end
 
-def self.update_from_message(message)
+  def self.update_from_message(message)
     message[:payload][:value][:slug] = message[:payload][:value][:slug].downcase
     query = {
         :start_at => DateTime.parse(message[:payload][:start_at]),
@@ -68,6 +63,7 @@ def self.update_from_message(message)
   end
 
   private
+  attr_writer :artefact
 
   def is_entries_positive?
     is_positive?(entries)
@@ -81,4 +77,5 @@ def self.update_from_message(message)
     return [false, "It must be numeric"] unless value.is_a?(Numeric)
     (value >= 0) ? true : [false, "It must be greater than or equal to 0"]
   end
+
 end
