@@ -20,13 +20,20 @@ class ContentEngagementVisits
     visits_hash = Hash[visits.map { |visits| [[visits.format, visits.slug], visits] }]
 
     Artefact.all.map do |artefact|
-      visits_for(artefact, visits_hash, max(:start_at)).tap { |visits| visits.send(:artefact=, artefact) }
+      visits_for(artefact, visits_hash).tap { |visits| visits.send(:artefact=, artefact) }
     end
   end
 
-  def self.visits_for(artefact, visits, start_at)
+  def self.visits_for(artefact, visits)
     artefact_visits = visits[[artefact.format, artefact.slug]]
-    artefact_visits || ContentEngagementVisits.new(entries: 0, successes: 0, slug: artefact.slug, format: artefact.format, start_at: start_at, end_at: start_at + 7)
+    artefact_visits || ContentEngagementVisits.new(
+      entries: 0,
+      successes: 0,
+      slug: artefact.slug,
+      format: artefact.format,
+      start_at: visits.values.first[:start_at],
+      end_at: visits.values.first[:end_at]
+    )
   end
 
   def self.update_from_message(message)
