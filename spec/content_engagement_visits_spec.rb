@@ -18,7 +18,6 @@ describe ContentEngagementVisits do
 
       content_engagement_visits = ContentEngagementVisits.last_week_visits
 
-      content_engagement_visits.should have(2).items
       content_engagement_visits.should_not include(older_item)
     end
 
@@ -43,6 +42,26 @@ describe ContentEngagementVisits do
       content_engagement_visits = ContentEngagementVisits.last_week_visits
 
       content_engagement_visits.should have(1).item
+    end
+
+    it "should return data for artefacts with 0 visits and successes" do
+      FactoryGirl.create(:artefact, format: "guide", slug: "very-unpopular-guide", title: "Very unpopular guide")
+      artefact = FactoryGirl.create(:artefact, format: "guide", slug: "driving-on-the-right-side")
+
+      FactoryGirl.create(:content_engagement_visits, format: "guide", slug: "driving-on-the-right-side", artefact: artefact, start_at: DateTime.new(2013, 2, 10), end_at: DateTime.new(2013, 2, 17))
+
+      content_engagement_visits = ContentEngagementVisits.last_week_visits
+
+      content_engagement_visits.should have(2).items
+
+      unpopular_guide_visits = content_engagement_visits.find {|v| v.format == "guide" && v.slug == "very-unpopular-guide"}
+      unpopular_guide_visits.should_not be_nil
+      unpopular_guide_visits.entries.should == 0
+      unpopular_guide_visits.successes.should == 0
+      unpopular_guide_visits.start_at.should == DateTime.new(2013,2,10)
+      unpopular_guide_visits.end_at.should == DateTime.new(2013,2,17)
+
+      unpopular_guide_visits.artefact.title.should == "Very unpopular guide"
     end
   end
 
