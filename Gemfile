@@ -1,12 +1,12 @@
 source "https://rubygems.org"
-source 'https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/'
+source 'https://BnrJb6FZyzspBboNJzYZ@gem.fury.io/govuk/'
 
 gem "rake", "0.9.2"
 gem "data_mapper", "1.2.0"
 gem "dm-mysql-adapter", "1.2.0"
-gem "datainsight_logging"
+gem "datainsight_logging", "0.0.3"
 gem "airbrake", "3.1.5"
-gem "datainsight_recorder", "0.1.0"
+gem "datainsight_recorder", "0.1.1"
 
 group :exposer do
   gem "unicorn"
