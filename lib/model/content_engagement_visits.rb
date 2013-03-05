@@ -19,7 +19,8 @@ class ContentEngagementVisits
     visits = ContentEngagementVisits.all(start_at: max(:start_at))
     visits_hash = Hash[visits.map { |visits| [[visits.format, visits.slug], visits] }]
 
-    Artefact.all.map do |artefact|
+    uptodate_artefacts = Artefact.all(collected_at: Artefact.max(:collected_at))
+    uptodate_artefacts.map do |artefact|
       visits_for(artefact, visits_hash).tap { |visits| visits.send(:artefact=, artefact) }
     end
   end

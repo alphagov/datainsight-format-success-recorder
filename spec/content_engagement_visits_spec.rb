@@ -63,6 +63,22 @@ describe ContentEngagementVisits do
 
       unpopular_guide_visits.artefact.title.should == "Very unpopular guide"
     end
+
+    it "should return only data for artefacts existing at the time of the last collection" do
+      existing_artefact_1 = FactoryGirl.create(:artefact, format: "guide", slug: "driving-on-the-right-side", collected_at: DateTime.new(2013, 3, 5))
+      existing_artefact_2 = FactoryGirl.create(:artefact, format: "guide", slug: "tax-submission", collected_at: DateTime.new(2013, 3, 5))
+      deleted_artefact = FactoryGirl.create(:artefact, format: "guide", slug: "importing-pets", collected_at: DateTime.new(2013, 3, 4))
+
+      FactoryGirl.create(:content_engagement_visits, format: "guide", slug: "car-insurance",  artefact: existing_artefact_1, start_at: DateTime.new(2013, 2, 10), end_at: DateTime.new(2013, 2, 17))
+      FactoryGirl.create(:content_engagement_visits, format: "guide", slug: "tax-submission", artefact: existing_artefact_2, start_at: DateTime.new(2013, 2, 10), end_at: DateTime.new(2013, 2, 17))
+      FactoryGirl.create(:content_engagement_visits, format: "guide", slug: "importing-pets", artefact: deleted_artefact,    start_at: DateTime.new(2013, 2, 10), end_at: DateTime.new(2013, 2, 17))
+
+      content_engagement_visits = ContentEngagementVisits.last_week_visits
+
+      visits = content_engagement_visits.find {|visits| visits.slug == "importing-pets"}
+
+      visits.should be_nil
+    end
   end
 
   describe "validation" do
