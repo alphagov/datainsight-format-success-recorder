@@ -9,7 +9,7 @@ class Artefact
 
   def self.update_from_message(message)
     values = {
-        collected_at: Date.parse(message[:envelope][:collected_at]),
+        collected_at: DateTime.parse(message[:envelope][:collected_at]),
         source: message[:envelope][:collector],
         format: fix_format(message[:payload][:format]),
         title: message[:payload][:title],
