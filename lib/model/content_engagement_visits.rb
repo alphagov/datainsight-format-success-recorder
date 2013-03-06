@@ -19,8 +19,7 @@ class ContentEngagementVisits
     visits = ContentEngagementVisits.all(start_at: max(:start_at))
     visits_hash = Hash[visits.map { |visits| [[visits.format, visits.slug], visits] }]
 
-    uptodate_artefacts = Artefact.all(collected_at: Artefact.max(:collected_at))
-    uptodate_artefacts.map do |artefact|
+    published_artefacts.map do |artefact|
       visits_for(artefact, visits_hash).tap { |visits| visits.send(:artefact=, artefact) }
     end
   end
@@ -72,6 +71,22 @@ class ContentEngagementVisits
 
   private
   attr_writer :artefact
+
+  # returns all the artefacts currently live on gov.uk
+  #
+  # An artefact is considered published if its collection date is the same as the collection date of the last collected
+  # artefact; if an artefact has an older collection date, it means it was not in the list of artefacts retrieved by the
+  # collector during last execution, which implies it had been either deleted or renamed.
+  #
+  # NB. Current implementation is based on the consideration that a collection process can take several minutes to
+  # complete, and therefore artefacts collected during the last collection can have slightly different collection dates
+  def self.published_artefacts
+    Artefact.all(:collected_at.gte => day_of_last_collection)
+  end
+
+  def self.day_of_last_collection
+    Artefact.max(:collected_at).to_date
+  end
 
   def is_entries_positive?
     is_positive?(entries)
