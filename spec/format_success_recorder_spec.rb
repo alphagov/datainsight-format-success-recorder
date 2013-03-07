@@ -7,7 +7,7 @@ describe "FormatSuccessRecorder" do
   before(:each) do
     @message = {
         :envelope => {
-            :collected_at => "2012-09-18T13:51:59+01:00",
+            :collected_at => "2012-09-18T13:51:59+00:00",
             :collector => "Google Analytics",
             :_routing_key => "google_analytics.entry_and_success.weekly"
         },
