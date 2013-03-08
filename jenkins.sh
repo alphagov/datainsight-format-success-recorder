@@ -2,4 +2,4 @@
 set -e
 
 bundle install --path "${HOME}/bundles/${JOB_NAME}"
-bundle exec rake ci:setup:rspec spec --trace
+bundle exec rake db:migrate:up ci:setup:rspec spec --trace

@@ -22,3 +22,6 @@ namespace :spec do
     task.rspec_opts = ["--format documentation"]
   end
 end
+
+require_relative "lib/datamapper_config"
+require "datainsight_recorder/rake_tasks"

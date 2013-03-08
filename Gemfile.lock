@@ -33,7 +33,7 @@ GEM
     database_cleaner (0.8.0)
     datainsight_logging (0.0.3)
       logging
-    datainsight_recorder (0.1.1)
+    datainsight_recorder (0.2.0)
       bunny
       data_mapper (= 1.2.0)
       datainsight_logging
@@ -138,7 +138,7 @@ DEPENDENCIES
   data_mapper (= 1.2.0)
   database_cleaner
   datainsight_logging (= 0.0.3)
-  datainsight_recorder (= 0.1.1)
+  datainsight_recorder (= 0.2.0)
   dm-mysql-adapter (= 1.2.0)
   dm-sqlite-adapter (= 1.2.0)
   factory_girl
