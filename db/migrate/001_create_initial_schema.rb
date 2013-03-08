@@ -1,17 +1,4 @@
-require "data_mapper"
-require "dm-migrations/migration_runner"
-
-module DataMapper
-  module Migrations
-    module MysqlAdapter
-
-      def index_exists?(name, table)
-        statement = "show index from #{quote_name(table)} where key_name = ?"
-        select(statement, name).count > 0
-      end
-    end
-  end
-end
+require "datainsight_recorder/migrations"
 
 migration 1, :create_initial_schema do
   up do

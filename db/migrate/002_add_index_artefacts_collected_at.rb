@@ -1,5 +1,4 @@
-require "data_mapper"
-require "dm-migrations/migration_runner"
+require "datainsight_recorder/migrations"
 
 migration 2, :add_index_artefacts_collected_at do
   up do
