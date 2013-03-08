@@ -6,7 +6,7 @@ gem "data_mapper", "1.2.0"
 gem "dm-mysql-adapter", "1.2.0"
 gem "datainsight_logging", "0.0.3"
 gem "airbrake", "3.1.5"
-gem "datainsight_recorder", "0.1.1"
+gem "datainsight_recorder", "0.2.0"
 
 group :exposer do
   gem "unicorn"

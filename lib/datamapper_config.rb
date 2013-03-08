@@ -1,5 +1,6 @@
 require 'dm-constraints'
 require 'dm-migrations'
+require 'datainsight_logging'
 
 require_relative '../lib/model/format_success'
 require_relative '../lib/model/content_engagement_visits'
@@ -22,21 +23,20 @@ module DataMapperConfig
   private
 
   def self.configure_development
-    DataMapper.setup(:default, 'mysql://root:@localhost/datainsights_format_success')
-    DataMapper.finalize
-    DataMapper.auto_upgrade!
+    configure_db('mysql://root:@localhost/datainsights_format_success')
   end
 
   def self.configure_production
-    DataMapper.setup(:default, 'mysql://datainsight:@localhost/datainsights_format_success')
-    DataMapper.finalize
-    DataMapper.auto_upgrade!
+    configure_db('mysql://datainsight:@localhost/datainsights_format_success')
   end
 
   def self.configure_test
-    ENV['TZ'] = DateTime.now.zone
-    DataMapper.setup(:default, 'sqlite::memory:')
-    DataMapper.finalize
-    DataMapper.auto_upgrade!
+    configure_db('mysql://datainsight:@localhost/datainsights_format_success_test')
   end
+
+  def self.configure_db(connection_url)
+    DataMapper.setup(:default, connection_url)
+    DataMapper.finalize
+  end
+
 end
