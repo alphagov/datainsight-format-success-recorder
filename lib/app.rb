@@ -19,7 +19,7 @@ configure do
   enable :logging
   unless test?
     Datainsight::Logging.configure(:type => :exposer)
-    DataMapperConfig.configure
+    DataInsight::Recorder::DataMapperConfig.configure
   end
 end
 
