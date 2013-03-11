@@ -26,5 +26,4 @@ unless [ENV["RACK_ENV"], ENV["RAILS_ENV"]].include? "production"
   end
 end
 
-require_relative "lib/datamapper_config"
 require "datainsight_recorder/rake_tasks"

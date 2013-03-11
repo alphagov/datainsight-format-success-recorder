@@ -1,6 +1,3 @@
-require "data_mapper"
-require "datainsight_recorder/base_fields"
-require "datainsight_recorder/time_series"
 
 module FormatSuccess
   class Model
