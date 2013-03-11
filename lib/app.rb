@@ -3,8 +3,8 @@ Bundler.require(:default, :exposer)
 
 require 'json'
 
-require_relative "datamapper_config"
 require_relative "initializers"
+require_relative "models"
 require_relative "presenter/content_engagement_detail_presenter"
 
 helpers Datainsight::Logging::Helpers

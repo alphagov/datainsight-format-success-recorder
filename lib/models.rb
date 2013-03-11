@@ -1,0 +1,7 @@
+require_relative "initializers"
+require "datainsight_recorder/datamapper_config"
+require "datainsight_recorder/base_fields"
+require "datainsight_recorder/time_series"
+require_relative "../lib/model/format_success"
+require_relative "../lib/model/content_engagement_visits"
+require_relative "../lib/model/artefact"

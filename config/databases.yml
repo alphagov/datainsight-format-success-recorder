@@ -1,0 +1,6 @@
+development:
+  uri: "mysql://root:@localhost/datainsights_format_success"
+production:
+  uri: "mysql://datainsight:@localhost/datainsights_format_success"
+test:
+  uri: "mysql://datainsight:@localhost/datainsights_format_success_test"

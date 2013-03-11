@@ -1,5 +1,3 @@
-require_relative "../../lib/datamapper_config"
-
 FactoryGirl.define do
   factory :format_success, class: FormatSuccess::Model do
     source "govuk"
