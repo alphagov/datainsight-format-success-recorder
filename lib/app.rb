@@ -40,7 +40,7 @@ get '/format-success' do
         }
       }
     },
-    :updated_at => FormatSuccess::Model.updated_at
+    :updated_at => FormatSuccess::Model.updated_at.strftime(TimePeriodPresenter::TIMESTAMP_FORMAT)
   }.to_json
 end
 
