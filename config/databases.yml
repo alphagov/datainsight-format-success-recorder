@@ -3,4 +3,4 @@ development:
 production:
   uri: "mysql://datainsight:@localhost/datainsights_format_success"
 test:
-  uri: "mysql://datainsight:@localhost/datainsights_format_success_test"
+  uri: "mysql://datainsight:datainsight@localhost/datainsights_format_success_test"
