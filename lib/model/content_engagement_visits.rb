@@ -53,7 +53,13 @@ class ContentEngagementVisits
       content_engagement_visits.successes = message[:payload][:value][:successes]
       content_engagement_visits.format = message[:payload][:value][:format]
       content_engagement_visits.collected_at = DateTime.parse(message[:envelope][:collected_at])
-      content_engagement_visits.save
+      begin
+        content_engagement_visits.save
+      rescue DataMapper::SaveFailureError => e
+        logger.error(e.resource.errors.inspect)
+        raise
+      end
+
     else
       logger.info("Create new record for #{query}")
       ContentEngagementVisits.create(

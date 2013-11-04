@@ -33,7 +33,12 @@ module FormatSuccess
       record.source = message[:envelope][:collector]
       record.entries = message[:payload][:value][:entries]
       record.successes = message[:payload][:value][:successes]
-      record.save
+      begin
+        record.save
+      rescue DataMapper::SaveFailureError => e
+        logger.error(e.resource.errors.inspect)
+        raise
+      end
     end
 
     def self.get_latest_formats(filter_by=nil)
