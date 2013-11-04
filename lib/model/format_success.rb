@@ -1,4 +1,3 @@
-
 module FormatSuccess
   class Model
     include DataMapper::Resource
@@ -16,7 +15,7 @@ module FormatSuccess
 
     validates_with_method :validate_entries_positive, :if => lambda { |m| m.entries.is_a?(Numeric) }
     validates_with_method :validate_successes_positive, :if => lambda { |m| m.successes.is_a?(Numeric) }
-    validates_with_method :validate_success_bigger_than_entries, :if => lambda { |m| m.entries.is_a?(Numeric) and m.successes.is_a?(Numeric) }
+    validates_with_method :validate_entries_bigger_than_successes, :if => lambda { |m| m.entries.is_a?(Numeric) and m.successes.is_a?(Numeric) }
 
     validates_with_method :validate_start_at_in_past
 
@@ -74,7 +73,7 @@ module FormatSuccess
       validate_positive(:successes)
     end
 
-    def validate_success_bigger_than_entries
+    def validate_entries_bigger_than_successes
       if self.entries >= self.successes
         true
       else
