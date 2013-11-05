@@ -35,7 +35,11 @@ module FormatSuccess
       begin
         record.save
       rescue DataMapper::SaveFailureError => e
-        logger.error(e.resource.errors.inspect)
+        begin
+          logger.error("SaveFailure: #{e.resource.errors.inspect}")
+        rescue NoMethodError
+          logger.error("SaveFailure (no detail): #{e}")
+        end
         raise
       end
     end
