@@ -12,8 +12,8 @@ describe "FormatSuccessRecorder" do
             :_routing_key => "google_analytics.entry_and_success.weekly"
         },
         :payload => {
-            :start_at => "2012-09-09T00:00:00+00:00",
-            :end_at => "2012-09-16T00:00:00+00:00",
+            :start_at => "2012-09-09T00:00:00+01:00",
+            :end_at => "2012-09-16T00:00:00+01:00",
             :value => {
               :site => "govuk",
               :format => "transaction",
@@ -36,8 +36,8 @@ describe "FormatSuccessRecorder" do
     format_visits = FormatSuccess::Model.first
     format_visits.should_not be_nil
     format_visits.collected_at.should == DateTime.parse(@message[:envelope][:collected_at])
-    format_visits.start_at.should     == DateTime.new(2012, 9, 9)
-    format_visits.end_at.should       == DateTime.new(2012, 9, 16)
+    format_visits.start_at.should     == DateTime.parse("2012-09-09T00:00:00+01:00")
+    format_visits.end_at.should       == DateTime.parse("2012-09-16T00:00:00+01:00")
     format_visits.format.should       == @message[:payload][:value][:format]
     format_visits.entries.should      == @message[:payload][:value][:entries]
     format_visits.successes.should    == @message[:payload][:value][:successes]
