@@ -28,8 +28,8 @@ describe "Format Visits" do
           :_routing_key => "google_analytics.entry_and_success.weekly"
         },
         :payload => {
-          :start_at => "2011-03-28T00:00:00",
-          :end_at => "2011-04-04T00:00:00",
+          :start_at => "2011-03-28T00:00:00+01:00",
+          :end_at => "2011-04-04T00:00:00+01:00",
           :value => {
             :site => "govuk",
             :format => "transaction",
@@ -49,8 +49,8 @@ describe "Format Visits" do
 
       record = records.first
       record.collected_at.should == DateTime.new(2012, 12, 12)
-      record.start_at.should == DateTime.new(2011, 3, 28)
-      record.end_at.should == DateTime.new(2011, 4, 4)
+      record.start_at.should == DateTime.parse("2011-03-28T00:00:00+01:00")
+      record.end_at.should == DateTime.parse("2011-04-04T00:00:00+01:00")
       record.format.should == "transaction"
       record.entries.should == 10792
       record.successes.should == 0
@@ -68,8 +68,8 @@ describe "Format Visits" do
 
       record = records.first
       record.collected_at.should == DateTime.new(2012, 12, 12)
-      record.start_at.should == DateTime.new(2011, 3, 28)
-      record.end_at.should == DateTime.new(2011, 4, 4)
+      record.start_at.should == DateTime.parse("2011-03-28T00:00:00+01:00")
+      record.end_at.should == DateTime.parse("2011-04-04T00:00:00+01:00")
       record.format.should == "transaction"
       record.entries.should == 9
       record.successes.should == 1
