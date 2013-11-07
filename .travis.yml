@@ -1,0 +1,15 @@
+language: ruby
+rvm:
+  - 1.9.3
+  - 2.0.0
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq wbritish
+script:
+  - RACK_ENV=test bundle exec rake db:migrate:up
+  - bundle exec rake ci:setup:rspec spec --trace
+notifications:
+  email: false
+matrix:
+  allow_failures:
+    - rvm: 2.0.0
